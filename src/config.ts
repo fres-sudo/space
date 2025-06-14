@@ -80,30 +80,14 @@ export const themeConfig: ThemeConfig = {
     // https://giscus.app/
     giscus: {
       repo: 'fres-sudo/space/',
-      repoID: '',
-      category: '',
-      categoryID: '',
+      repoID: 'R_kgDOO7KFdw',
+      category: 'General',
+      categoryID: 'DIC_kwDOO7KFd84CrfBR',
       mapping: 'pathname',
       strict: '0',
       reactionsEnabled: '1',
       emitMetadata: '0',
       inputPosition: 'bottom',
-    },
-    // waline
-    // https://waline.js.org/en/
-    waline: {
-      // server url
-      serverURL: 'https://retypeset-comment.radishzz.cc',
-      // emoji url
-      emoji: [
-        'https://unpkg.com/@waline/emojis@1.2.0/tw-emoji',
-        // 'https://unpkg.com/@waline/emojis@1.2.0/bmoji',
-        // more emojis: https://waline.js.org/en/guide/features/emoji.html
-      ],
-      // gif search
-      search: false, // true, false
-      // image uploader
-      imageUploader: false, // true, false
     },
   },
   // COMMENT SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> END
