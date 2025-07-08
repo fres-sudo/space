@@ -144,7 +144,7 @@ export async function generateFeed({ lang }: GenerateFeedOptions = {}) {
     language: lang || themeConfig.global.locale,
     copyright: `Copyright © ${new Date().getFullYear()} ${siteAuthor}`,
     updated: new Date(),
-    generator: 'Astro-Theme-Retypeset with Feed for Node.js',
+    generator: 'Francesco Calicchio\'s Blog Feed Generator',
     feedLinks: {
       rss: new URL(lang ? `/${lang}/rss.xml` : '/rss.xml', url).toString(),
       atom: new URL(lang ? `/${lang}/atom.xml` : '/atom.xml', url).toString(),
@@ -171,16 +171,16 @@ export async function generateFeed({ lang }: GenerateFeedOptions = {}) {
     // Optimize content processing
     const postContent = post.body
       ? sanitizeHtml(
-          await fixRelativeImagePaths(
-            // Remove HTML comments before rendering markdown
-            markdownParser.render(post.body.replace(/<!--[\s\S]*?-->/g, '')),
-            url,
-          ),
-          {
-            // Allow <img> tags in feed content
-            allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
-          },
-        )
+        await fixRelativeImagePaths(
+          // Remove HTML comments before rendering markdown
+          markdownParser.render(post.body.replace(/<!--[\s\S]*?-->/g, '')),
+          url,
+        ),
+        {
+          // Allow <img> tags in feed content
+          allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+        },
+      )
       : ''
 
     // publishDate -> Atom:<published>, RSS:<pubDate>

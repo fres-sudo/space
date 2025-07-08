@@ -35,18 +35,30 @@ const pinnedPosts = await getPinnedPosts(lang)
 const postsByYear = await getPostsByYear(lang)
 ---
 <Layout>
+  <section class="mb-7.5">
+    <div class="uno-decorative-line"></div>
+    <div class="prose prose-lg max-w-none">
+      <h2 class="text-2xl font-bold mb-4 text-primary">About Me</h2>
+      <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+        I am a Software Engineer from Italy 🇮🇹 passionate about building application of every kind, from web to mobile and beyond. I love to learn new technologies and share my knowledge with others. In my free time, I enjoy hacking stuffs, cycling and geopolitic.
+      </p>
+    </div>
+  </section>
+
+  <div class="uno-decorative-line w-full"></div>
+
+      <h2 class="text-2xl font-bold mb-4 text-primary">Posts</h2>
   <!-- Pinned Posts -->
   {pinnedPosts.length > 0 && (
     <section class="mb-7.5">
-      <div class="uno-decorative-line"></div>
       <PostList posts={pinnedPosts} lang={lang} pinned={true} />
     </section>
   )}
+      <div class="uno-decorative-line"></div>
 
   <!-- Regular Posts -->
   {[...postsByYear.entries()].map(([_year, posts]) => (
     <section class="mb-7.5">
-      <div class="uno-decorative-line"></div>
       <PostList posts={posts} lang={lang} />
     </section>
   ))}

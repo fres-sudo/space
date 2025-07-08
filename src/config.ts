@@ -6,9 +6,9 @@ export const themeConfig: ThemeConfig = {
     // site title
     title: 'Francesco Calicchio',
     // site subtitle
-    subtitle: 'Software Craftsmanship, Design, and Technology',
+    subtitle: 'Software Craftsmanship, Critical Thinking and Every day life',
     // site description
-    description: 'A blog about software craftsmanship, design, and technology.',
+    description: 'Software Craftsmanship, Critical Thinking and Every day life',
     // use i18n title/subtitle/description from src/i18n/ui.ts instead of static ones above
     i18nTitle: true, // true, false
     // author name
@@ -23,31 +23,18 @@ export const themeConfig: ThemeConfig = {
 
   // COLOR SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> START
   color: {
-    // default theme mode
-    mode: 'light', // light, dark, auto
+    mode: 'auto',
     light: {
-      // primary color
-      // used for title, hover, etc
-      // oklch color picker: https://oklch.com/
-      primary: 'oklch(25% 0.005 298)',
-      // secondary color
-      // used for post text
-      secondary: 'oklch(40% 0.005 298)',
-      // background color
-      background: 'oklch(96% 0.005 298)',
-      // highlight color
-      // used for navbar, selected text, etc
-      highlight: 'oklch(0.93 0.195089 103.2532 / 0.5)', // rgba(255,235,0,0.5)
+      primary: 'oklch(25% 0.12 140)',         // darker forest green
+      secondary: 'oklch(15% 0.03 30)',        // dark brown
+      background: 'oklch(97% 0.01 60)',       // warm off-white
+      highlight: 'oklch(45% 0.18 130 / 0.25)', // deep green highlight
     },
     dark: {
-      // primary color
-      primary: 'oklch(92% 0.005 298)',
-      // secondary color
-      secondary: 'oklch(77% 0.005 298)',
-      // background color
-      background: 'oklch(22% 0.005 298)',
-      // highlight color
-      highlight: 'oklch(0.93 0.195089 103.2532 / 0.2)', // rgba(255,235,0,0.2)
+      primary: 'oklch(80% 0.10 145)',         // light moss (slightly less bright)
+      secondary: 'oklch(90% 0.02 60)',        // warm off-white
+      background: 'oklch(0.184 0.01 182.67)',        // dark brown-black
+      highlight: 'oklch(60% 0.15 135 / 0.3)', // muted forest accent
     },
   },
   // COLOR SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> END
@@ -55,14 +42,13 @@ export const themeConfig: ThemeConfig = {
   // GLOBAL SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> START
   global: {
     // default language
-    locale: 'zh', // de, en, es, fr, ja, ko, pl, pt, ru, zh, zh-tw
+    locale: 'en', // de, en, es, fr, ja, ko, pl, pt, ru, zh, zh-tw
     // more languages
     // not fill in the locale code above again, can be an empty array []
-    moreLocales: ['en', 'es', 'ja', 'ru', 'zh-tw'], // ['de', 'en', 'es', 'fr', 'ja', 'ko', 'pl', 'pt', 'ru', 'zh', 'zh-tw']
-    // font styles for post text
-    fontStyle: 'sans', // sans, serif
+    moreLocales: ['en', 'it'],
+    fontStyle: 'serif', // sans, serif
     // date format for posts
-    dateFormat: 'YYYY-MM-DD', // YYYY-MM-DD, MM-DD-YYYY, DD-MM-YYYY, MONTH DAY YYYY, DAY MONTH YYYY
+    dateFormat: 'DD-MM-YYYY', // YYYY-MM-DD, MM-DD-YYYY, DD-MM-YYYY, MONTH DAY YYYY, DAY MONTH YYYY
     // enable table of contents for all posts by default
     toc: true, // true, false
     // enable KaTeX for mathematical formulas rendering
@@ -74,55 +60,28 @@ export const themeConfig: ThemeConfig = {
 
   // COMMENT SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> START
   comment: {
-    // enable comment system
-    enabled: true, // true, false
-    // giscus
-    // https://giscus.app/
-    giscus: {
-      repo: 'fres-sudo/space/',
-      repoID: 'R_kgDOO7KFdw',
-      category: 'General',
-      categoryID: 'DIC_kwDOO7KFd84CrfBR',
-      mapping: 'pathname',
-      strict: '0',
-      reactionsEnabled: '1',
-      emitMetadata: '0',
-      inputPosition: 'bottom',
+    enabled: true,
+    waline: {
+      serverURL: 'https://comment.fres.space',
+      emoji: [
+        'https://unpkg.com/@waline/emojis@1.2.0/tw-emoji',
+      ],
+      search: false,
+      imageUploader: false,
     },
   },
   // COMMENT SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> END
 
   // SEO SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> START
   seo: {
-    // @twitter ID
     twitterID: '@shelovesfres',
-    // site verification
     verification: {
-      // google search console
-      // https://search.google.com/search-console
-      google: 'AUCrz5F1e5qbnmKKDXl2Sf8u6y0kOpEO1wLs6HMMmlM',
-      // bing webmaster tools
-      // https://www.bing.com/webmasters
-      bing: '64708CD514011A7965C84DDE1D169F87',
-      // yandex webmaster
-      // https://webmaster.yandex.com
-      yandex: '',
-      // baidu search
-      // https://ziyuan.baidu.com
-      baidu: '',
+      bing: '0D27A7818649ECAF77E548D149084C55',
+      yandex: '8b438d54ba013094',
     },
-    // google analytics
-    // https://analytics.google.com
-    googleAnalyticsID: '',
-    // umami analytics
-    // https://cloud.umami.is
-    umamiAnalyticsID: '520af332-bfb7-4e7c-9386-5f273ee3d697',
-    // follow verification
-    // https://follow.is/
+    umamiAnalyticsID: 'a6ed80a-50a0-407b-b5cb-d0d373b555f5',
     follow: {
-      // feed ID
       feedID: '',
-      // user ID
       userID: '',
     },
     // apiflash access key
@@ -162,7 +121,7 @@ export const themeConfig: ThemeConfig = {
   preload: {
     // image hosting url
     // optimize remote images in Markdown files to avoid cumulative layout shift
-    imageHostURL: 'image.radishzz.cc',
+    imageHostURL: 'image.fres.space',
     // custom google analytics js
     // for users who route analytics javascript to a customized domain
     // See https://gist.github.com/xiaopc/0602f06ca465d76bd9efd3dda9393738
