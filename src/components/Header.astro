@@ -19,7 +19,6 @@ const SubtitleTag = isPost ? 'div' : 'h2'
     isPost
     ? 'mb-10.8'
     : 'mb-10.5',
-    'lg:(uno-desktop-column top-20) cjk:tracking-0.02em',
   ]}
 >
   <TitleTag
@@ -32,7 +31,7 @@ const SubtitleTag = isPost ? 'div' : 'h2'
   >
     <!-- Fix text cropping issues during view transition on iOS by adding a div tag -->
     <div
-      class="box-content inline-block pr-1"
+      class="flex-rows box-content inline-block flex pr-1"
       transition:name={`site-title-${currentLang}`}
       data-disable-theme-transition
     >

@@ -17,16 +17,16 @@ export const themeConfig: ThemeConfig = {
   color: {
     mode: 'auto',
     light: {
-      primary: 'oklch(25% 0.12 140)',         // darker forest green
-      secondary: 'oklch(15% 0.03 30)',        // dark brown
-      background: 'oklch(97% 0.01 60)',       // warm off-white
-      highlight: 'oklch(45% 0.18 130 / 0.25)', // deep green highlight
+      primary: 'oklch(0% 0 0)', // Pure black
+      secondary: 'oklch(30% 0 0)', // Dark gray
+      background: 'oklch(100% 0 0)', // Pure white
+      highlight: 'oklch(50% 0 0 / 0.15)', // Mid-gray transparent
     },
     dark: {
-      primary: 'oklch(80% 0.10 145)',         // light moss (slightly less bright)
-      secondary: 'oklch(90% 0.02 60)',        // warm off-white
-      background: 'oklch(0.184 0.01 182.67)',        // dark brown-black
-      highlight: 'oklch(60% 0.15 135 / 0.3)', // muted forest accent
+      primary: 'oklch(100% 0 0)', // Pure white
+      secondary: 'oklch(70% 0 0)', // Light gray
+      background: 'oklch(0% 0 0)', // Pure black
+      highlight: 'oklch(50% 0 0 / 0.25)', // Mid-gray transparent
     },
   },
   // COLOR SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> END
