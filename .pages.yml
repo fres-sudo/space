@@ -15,7 +15,7 @@ content:
     label: Blog Posts
     type: collection
     path: src/content/posts
-    format: frontmatter
+    format: yaml-frontmatter
     create: true
     delete: true
     fields:
@@ -49,7 +49,7 @@ content:
     label: About Pages
     type: collection
     path: src/content/about
-    format: frontmatter
+    format: yaml-frontmatter
     create: true
     delete: false
     fields:
