@@ -1,0 +1,68 @@
+media:
+  - name: images
+    label: Images
+    path: public/images
+    extensions:
+      - png
+      - jpg
+      - jpeg
+      - gif
+      - webp
+      - svg
+
+content:
+  - name: posts
+    label: Blog Posts
+    type: collection
+    path: src/content/posts
+    format: frontmatter
+    create: true
+    delete: true
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: description
+        label: Description
+        type: text
+        required: true
+      - name: published
+        label: Published Date
+        type: date
+        required: true
+      - name: draft
+        label: Draft
+        type: boolean
+        default: false
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+        required: false
+      - name: body
+        label: Content
+        type: rich-text
+        required: true
+
+  - name: about
+    label: About Pages
+    type: collection
+    path: src/content/about
+    format: frontmatter
+    create: true
+    delete: false
+    fields:
+      - name: lang
+        label: Language
+        type: string
+        required: true
+        options:
+          - value: en
+            label: English
+          - value: it
+            label: Italian
+      - name: body
+        label: Content
+        type: rich-text
+        required: true
