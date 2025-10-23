@@ -23,6 +23,16 @@
   </a>
 </p>
 
+## About
+
+Fres Space is a personal project that serves as a digital garden, showcasing my thoughts, ideas, and experiments in the realm of technology and beyond.
+
+## Stack
+
+- [Astro](https://astro.build/) - The modern static site builder.
+- [UnoCSS](https://unocss.dev/) - The instant on-demand atomic CSS
+- [Vercel](https://vercel.com/) - Hosting and deployment.
+
 ## License
 
 Licensed under the [MIT License](https://github.com/fres-sudo/space/blob/master/LICENSE).
