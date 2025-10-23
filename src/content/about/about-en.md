@@ -7,13 +7,13 @@ I am a Software Engineer from Italy 🇮🇹 passionate about building applicati
 
 *   Software Engineer Intern @ [Odoo](https://odoo.com) _from Oct 2024 to Jan 2025_
     
-*   Mobile Engineer @ [Syeew _from Mar 2025 to Present_](https://www.syeew.com)
+*   Mobile Engineer @ [Syeew](https://www.syeew.com) _from Mar 2025 to Present_
     
 *   Mobile Engineer Freelance _from Oct 2023 to Present_
     
 
 ### Education
 
-*   MSc in Computer Science @ University Of Pisa _from Oct 2025 to Oct 2027_
+*   MSc in Computer Science @ [University Of Pisa](https://unipi.it) _from Oct 2025 to Oct 2027_
     
-*   BCs in Computer Science @ University Of Camerino _from Oct 2022 to Oct 2025_
+*   BCs in Computer Science @ [University Of Camerino](https://unicam.it) _from Oct 2022 to Oct 2025_
