@@ -8,13 +8,15 @@ description: "Learn how to implement email/password authentication, JWT tokens, 
 abbrlink: "authentication-system-hono"
 ---
 
+![](https://5yyithvls1.ufs.sh/f/3nsI94TDxXoGglNkn0JwWvMDUV14dEPGi239taOR50FusABm)
+
+::github{repo="fres-sudo/hono-auth"}
 
 ## Introduction
 
 In this article I'm will try my best to explain to you about the creation from the ground up of a complete authentication system for your next successful application.
 
 I'm sorry for any grammatical errors, this is my first article and I'm not english mother tongue.
-
 
 ### Functionalities
 
@@ -44,7 +46,6 @@ The architecture is heavy inspired by this [awesome project](https://github.com/
 
 There are a few popular architectures for structuring backends. Technical, Onion, DDD, VSA, and the list goes on.
 
-
 #### Folder Structure
 
 - **controllers** - Responsible for routing requests
@@ -62,7 +63,6 @@ There are a few popular architectures for structuring backends. Technical, Onion
 
 - **dtos** - Data Transfer Objects (DTOs) are used to define the shape of data that is passed.
 
-
 #### File Naming
 
 Each file of the project is postfixed with its architectural type(e.g. `iam.service.ts`). This allows
@@ -77,7 +77,6 @@ For example, if you want to group folders by domain(DDD), you simply drag and dr
     └── events.repository.ts
 ```
 
-
 ### Why?
 
 I am making this article to help people struggling with finding a resource that will help them to spin up a complete authentication system, often the guides and video tutorial online not includes all the functionalities that I will show you in this article.
@@ -87,7 +86,6 @@ The claim is to have a place to get a look when you feel lost while writing your
 This IS NOT the perfect authentication system, this is just _mine_ authentication system.
 
 Authentication is usually a non-trivial area, so use my implementation at your own risk.
-
 
 ### Who?
 
@@ -99,11 +97,9 @@ In this article I will not go in the details of the architectural implementation
 
 Also a basic understand of Docker is better to complete understand the course.
 
-
 ### Where?
 
 No worries, you will find all the code in [this Github repository](https://github.com/fres-sudo/hono-auth). If you will find this article useful I will highly appreciate a Github ⭐ I still highly suggest you to follow
-
 
 ## Getting Started
 
@@ -141,7 +137,6 @@ Hello Hono!
 
 or something like that.
 
-
 ### Dependencies
 
 Before even touch any code, let's add some packages to our project so we don't have to do it later on the fly.
@@ -154,7 +149,6 @@ bun add tsyringe drizzle-kit drizzle-orm drizzle-zod zod reflect-metadata typesc
 
 Those are the main dependencies for this project, you just add those and you are ready to go.
 
-
 ### Setup
 
 Before starting there will be a quite long session of setup before starting. I'll break down the major steps for you, be sure to follows every single step to not get lost.
@@ -166,7 +160,6 @@ Before starting there will be a quite long session of setup before starting. I'l
 
 Let's get started.
 
-
 #### Docker Setup
 
 This step _is not necessary_ but I personally highly reccomend to follow up and use docker, to avoid any problems related to your machine.
@@ -174,7 +167,6 @@ This step _is not necessary_ but I personally highly reccomend to follow up and 
 I will not explain the reason to choose docker, just do it, and you will not regret it! Aside from jokes, Docker will help us to ensure that we all got the same setup and you work on an isolated environment.
 
 So first thing first you might need to install Docker (and [Docker Compose](https://docs.docker.com/compose/install/)) on you machine, you can find the installation [here](https://www.docker.com/), if you are new to docker I will suggest you to download also the desktop version if is your first time with docker so you can visually see what is going on.
-
 
 ##### Dockerfile
 
@@ -263,11 +255,9 @@ so in the `package.josn` we can define:
   }
 ```
 
-
 #### Drizzle Setup
 
 Even if Drizzle is a _fast_ ORM, it will require a small setup, nothing too crazy, don't worry. For more detailed introduction to setup Drizzle ORM I higly suggest you to check out their official [documentation](https://orm.drizzle.team/docs/get-started/postgresql-new) that is very great.
-
 
 ##### Setup Env variables
 
@@ -284,7 +274,6 @@ So create a `.env` file at root of the application and fill with the values you 
 ```
 DATABASE_URL=postgresql://postgres:postgres@postgres:5432/postgres
 ```
-
 
 ###### Configuration File
 
@@ -306,27 +295,27 @@ For a better structured setup, create a `config.type.ts` under `src/types/`.
 // src/types/config.type.ts
 
 export const config: Config = {
-	isProduction: process.env.NODE_ENV === "production",
-	api: {
-		origin: process.env.ORIGIN ?? "",
-	},
-	postgres: {
-		url: process.env.DATABASE_URL ?? "",
-	},
+ isProduction: process.env.NODE_ENV === "production",
+ api: {
+  origin: process.env.ORIGIN ?? "",
+ },
+ postgres: {
+  url: process.env.DATABASE_URL ?? "",
+ },
 };
 
 interface Config {
-	isProduction: boolean;
-	api: ApiConfig;
-	postgres: PostgresConfig;
+ isProduction: boolean;
+ api: ApiConfig;
+ postgres: PostgresConfig;
 }
 
 interface ApiConfig {
-	origin: string;
+ origin: string;
 }
 
 interface PostgresConfig {
-	url: string;
+ url: string;
 }
 ```
 
@@ -338,7 +327,6 @@ ORIGIN=http://localhost:3000 //3000 is the port we define in the docker-compose.
 
 Since now the project is local, we just use `localhost` but when you will deploy it you will put here your correct url.
 
-
 ##### Drizzle Configuration
 
 For correctly setup drizzle we need to define a configuration file, that will be placed in the root of our application, so in this case it will be `hono-auth/drizzle.config.ts`, this file will contains all the necessary information for drizzle to spin up.
@@ -349,19 +337,19 @@ import type { Config } from "drizzle-kit";
 import { config } from "./src/types/config.type";
 
 export default {
-	out: "./src/infrastructure/database/migrations",
-	schema: "./src/infrastructure/database/tables/index.ts",
-	breakpoints: false,
-	strict: true,
-	dialect: "postgresql",
-	dbCredentials: {
-		url: config.postgres.localUrl,
-	},
-	migrations: {
-		table: "migrations",
-		schema: "public",
-	},
-	verbose: true,
+ out: "./src/infrastructure/database/migrations",
+ schema: "./src/infrastructure/database/tables/index.ts",
+ breakpoints: false,
+ strict: true,
+ dialect: "postgresql",
+ dbCredentials: {
+  url: config.postgres.localUrl,
+ },
+ migrations: {
+  table: "migrations",
+  schema: "public",
+ },
+ verbose: true,
 } satisfies Config;
 ```
 
@@ -392,9 +380,9 @@ So far our infrastructure structure looks like this:
 ```
 └── infrastructure/
     └── database/
-    	├── utils.ts
-    	├── index.ts
-    	└── migrations/
+     ├── utils.ts
+     ├── index.ts
+     └── migrations/
 
 ```
 
@@ -405,23 +393,22 @@ As you can see there are also some files that we didn't meet so far. Let's break
 import { HTTPException } from "hono/http-exception";
 
 export const takeFirst = <T>(values: T[]): T | null => {
-	if (values.length === 0) return null;
-	return values[0]!;
+ if (values.length === 0) return null;
+ return values[0]!;
 };
 
 export const takeFirstOrThrow = <T>(values: T[]): T => {
-	if (values.length === 0)
-		throw new HTTPException(404, {
-			message: "Resource not found",
-		});
-	return values[0]!;
+ if (values.length === 0)
+  throw new HTTPException(404, {
+   message: "Resource not found",
+  });
+ return values[0]!;
 };
 ```
 
 This file contains two crucial function that we will be using a lot in our queries.
 
 The migration is the directory that we pointed in the index.ts file, and it will contains all our migration `.sql` file for out database.
-
 
 ### Dependencies Injection Setup
 
@@ -467,8 +454,8 @@ import type { HonoTypes } from "./../types/hono.type";
 import type { BlankSchema } from "hono/types";
 
 export interface Controller {
-	controller: Hono<HonoTypes, BlankSchema, "/">;
-	routes(): any;
+ controller: Hono<HonoTypes, BlankSchema, "/">;
+ routes(): any;
 }
 ```
 
@@ -479,14 +466,14 @@ The `HonoTypes` is an handy type used to define some global type, let's define i
 import type { Promisify, RateLimitInfo } from "hono-rate-limiter";
 
 export type HonoTypes = {
-	Variables: {
-		userId: string;
-		rateLimit: RateLimitInfo;
-		rateLimitStore: {
-			getKey?: (key: string) => Promisify<RateLimitInfo | undefined>;
-			resetKey: (key: string) => Promisify<void>;
-		};
-	};
+ Variables: {
+  userId: string;
+  rateLimit: RateLimitInfo;
+  rateLimitStore: {
+   getKey?: (key: string) => Promisify<RateLimitInfo | undefined>;
+   resetKey: (key: string) => Promisify<void>;
+  };
+ };
 };
 ```
 
@@ -504,13 +491,13 @@ import { Controller } from "../interfaces/controller.interface";
 
 @injectable()
 export class AuthController implements Controller {
-	controller = new Hono<HonoTypes>();
+ controller = new Hono<HonoTypes>();
 
-	constructor() {}
+ constructor() {}
 
-	routes() {
-		return this.controller;
-	}
+ routes() {
+  return this.controller;
+ }
 }
 ```
 
@@ -542,7 +529,7 @@ import { Hono } from "hono";
 const app = new Hono();
 
 app.get("/", (c) => {
-	return c.text("Hello Hono!");
+ return c.text("Hello Hono!");
 });
 
 export default app;
@@ -568,7 +555,7 @@ const authRoutes = container.resolve(AuthController).routes();
 app.route("/auth", authRoutes);
 
 app.get("/", (c) => {
-	return c.text("Hello Hono!");
+ return c.text("Hello Hono!");
 });
 
 /* -----------------------------------Exports----------------------------------*/
@@ -583,7 +570,6 @@ Seems all clear:
 - We define the `/auth` route, for handling our authentication routes.
 - We add the `import "reflect-metadata";` for the `tsyringe` lib to run on `bun`.
 - We can keep the `GET` endpoint on `/` for now, just for testing purpose, but it is up to you.
-
 
 ### Defining routes
 
@@ -605,42 +591,42 @@ import { limiter } from "../middlewares/limiter.middleware";
 
 @injectable()
 export class AuthController implements Controller {
-	controller = new Hono<HonoTypes>();
+ controller = new Hono<HonoTypes>();
 
-	constructor(
-		@inject(AuthService) private readonly authService: AuthService,
-		@inject(RefreshTokenService)
-		private readonly refreshTokenService: RefreshTokenService,
-		@inject(EmailVerificationsService)
-		private readonly emailVerificationsService: EmailVerificationsService,
-		@inject(PasswordResetService)
-		private readonly passwordResetService: PasswordResetService
-	) {}
+ constructor(
+  @inject(AuthService) private readonly authService: AuthService,
+  @inject(RefreshTokenService)
+  private readonly refreshTokenService: RefreshTokenService,
+  @inject(EmailVerificationsService)
+  private readonly emailVerificationsService: EmailVerificationsService,
+  @inject(PasswordResetService)
+  private readonly passwordResetService: PasswordResetService
+ ) {}
 
-	routes() {
-		return this.controller
-			.post(
-				"/login",
-				zValidator("json", loginDTO),
-				limiter({ limit: 10, minutes: 60 }),
-				async (context) => {
-					const body = context.req.valid("json");
-					const { user, accessToken, refreshToken } =
-						await this.authService.login(body);
-					return context.json({ user, accessToken, refreshToken });
-				}
-			)
-			.post(
-				"/signup",
-				zValidator("json", signUpDTO),
-				limiter({ limit: 10, minutes: 60 }),
-				async (context) => {
-					const data = context.req.valid("json");
-					const newUser = await this.authService.signup(data);
-					return context.json(newUser);
-				}
-			);
-	}
+ routes() {
+  return this.controller
+   .post(
+    "/login",
+    zValidator("json", loginDTO),
+    limiter({ limit: 10, minutes: 60 }),
+    async (context) => {
+     const body = context.req.valid("json");
+     const { user, accessToken, refreshToken } =
+      await this.authService.login(body);
+     return context.json({ user, accessToken, refreshToken });
+    }
+   )
+   .post(
+    "/signup",
+    zValidator("json", signUpDTO),
+    limiter({ limit: 10, minutes: 60 }),
+    async (context) => {
+     const data = context.req.valid("json");
+     const newUser = await this.authService.signup(data);
+     return context.json(newUser);
+    }
+   );
+ }
 }
 ```
 
@@ -655,7 +641,6 @@ For now you need to know that:
 As you can see I keep the response JSON as clean as possibile, to make it easier to deserialize in the frontend, but it is just my preference, you can pick wich standard you most like, in this case I will highly suggest you to make a custom response object, to be as consistent as possible.
 
 There are a lot of stuff beign added in this snippet, so let's try to make some order.
-
 
 #### Zod DTOs Validation
 
@@ -673,17 +658,17 @@ For the **Login DTO** is all simple, just email and password, so:
 import { z } from "zod";
 
 export const loginDTO = z.object({
-	email: z
-		.string({
-			required_error: "email-required",
-		})
-		.email(),
-	password: z
-		.string({
-			required_error: "password-required",
-		})
-		.min(8, "password-too-short")
-		.max(32, "password-too-long"),
+ email: z
+  .string({
+   required_error: "email-required",
+  })
+  .email(),
+ password: z
+  .string({
+   required_error: "password-required",
+  })
+  .min(8, "password-too-short")
+  .max(32, "password-too-long"),
 });
 
 export type LoginDTO = z.infer<typeof loginDTO>;
@@ -709,21 +694,21 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { usersTable } from "./../tables";
 
 export const signUpDTO = createInsertSchema(usersTable)
-	.extend({
-		passwordConfirmation: z.string({
-			required_error: "password-confirmation-required",
-		}),
-		email: z.string().email(),
-	})
-	.omit({
-		id: true,
-		createdAt: true,
-		updatedAt: true,
-	})
-	.refine((data) => data.password === data.passwordConfirmation, {
-		message: "passwords-donot-match",
-		path: ["passwordConfirmation"],
-	});
+ .extend({
+  passwordConfirmation: z.string({
+   required_error: "password-confirmation-required",
+  }),
+  email: z.string().email(),
+ })
+ .omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+ })
+ .refine((data) => data.password === data.passwordConfirmation, {
+  message: "passwords-donot-match",
+  path: ["passwordConfirmation"],
+ });
 
 export type SignUpDTO = z.infer<typeof signUpDTO>;
 ```
@@ -753,12 +738,12 @@ import { boolean, pgTable, text } from "drizzle-orm/pg-core";
 import { createId } from "@paralleldrive/cuid2";
 
 export const usersTable = pgTable("users", {
-	id: text("id")
-		.primaryKey()
-		.$defaultFn(() => createId()),
-	email: citext("email").notNull().unique(),
-	password: text("password").notNull(),
-	...timestamps,
+ id: text("id")
+  .primaryKey()
+  .$defaultFn(() => createId()),
+ email: citext("email").notNull().unique(),
+ password: text("password").notNull(),
+ ...timestamps,
 });
 ```
 
@@ -795,29 +780,28 @@ import { timestamp } from "drizzle-orm/pg-core";
 import { customType } from "drizzle-orm/pg-core";
 
 export const citext = customType<{ data: string }>({
-	dataType() {
-		return "citext";
-	},
+ dataType() {
+  return "citext";
+ },
 });
 
 export const timestamps = {
-	createdAt: timestamp("created_at", {
-		mode: "date",
-		withTimezone: true,
-	})
-		.notNull()
-		.defaultNow(),
-	updatedAt: timestamp("updated_at", {
-		mode: "date",
-		withTimezone: true,
-	})
-		.notNull()
-		.defaultNow(),
+ createdAt: timestamp("created_at", {
+  mode: "date",
+  withTimezone: true,
+ })
+  .notNull()
+  .defaultNow(),
+ updatedAt: timestamp("updated_at", {
+  mode: "date",
+  withTimezone: true,
+ })
+  .notNull()
+  .defaultNow(),
 };
 ```
 
 A very **important** step is to create
-
 
 #### Limiter Middleware
 
@@ -829,28 +813,27 @@ import { rateLimiter } from "hono-rate-limiter";
 import type { HonoTypes } from "./../types/hono.type";
 
 export function limiter({
-	limit,
-	minutes,
-	key = "",
+ limit,
+ minutes,
+ key = "",
 }: {
-	limit: number;
-	minutes: number;
-	key?: string;
+ limit: number;
+ minutes: number;
+ key?: string;
 }) {
-	return rateLimiter({
-		windowMs: minutes * 60 * 1000, // every x minutes
-		limit, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-		standardHeaders: "draft-6", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-		keyGenerator: (c) => {
-			const vars = c.var as HonoTypes["Variables"];
-			const clientKey = vars.userId || c.req.header("x-forwarded-for");
-			const pathKey = key || c.req.routePath;
-			return `${clientKey}_${pathKey}`;
-		}, // Method to generate custom identifiers for clients.
-	});
+ return rateLimiter({
+  windowMs: minutes * 60 * 1000, // every x minutes
+  limit, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  standardHeaders: "draft-6", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+  keyGenerator: (c) => {
+   const vars = c.var as HonoTypes["Variables"];
+   const clientKey = vars.userId || c.req.header("x-forwarded-for");
+   const pathKey = key || c.req.routePath;
+   return `${clientKey}_${pathKey}`;
+  }, // Method to generate custom identifiers for clients.
+ });
 }
 ```
-
 
 #### Login and Signup Service
 
@@ -863,7 +846,7 @@ Obviously we will use `Dependency Injection` also for the `Services`, the base o
 ```ts
 @injectable()
 export class AuthService {
-	constructor() {}
+ constructor() {}
 }
 ```
 
@@ -881,56 +864,56 @@ import { UsersRepository } from "../repositories/user.repository";
 
 @injectable()
 export class AuthService {
-	constructor(
-		@inject(HashingService) private readonly hashingService: HashingService,
-		@inject(UsersRepository) private readonly usersRepository: UsersRepository
-	) {}
+ constructor(
+  @inject(HashingService) private readonly hashingService: HashingService,
+  @inject(UsersRepository) private readonly usersRepository: UsersRepository
+ ) {}
 
-	async login(data: LoginDTO) {
-		try {
-			const user = await this.usersRepository.findOneByEmail(data.email);
-			if (!user) {
-				throw BadRequest("invalid-email");
-			}
-			const hashedPassword = await this.hashingService.verify(
-				user.password,
-				data.password
-			);
+ async login(data: LoginDTO) {
+  try {
+   const user = await this.usersRepository.findOneByEmail(data.email);
+   if (!user) {
+    throw BadRequest("invalid-email");
+   }
+   const hashedPassword = await this.hashingService.verify(
+    user.password,
+    data.password
+   );
 
-			if (!hashedPassword) {
-				throw BadRequest("wrong-password");
-			}
+   if (!hashedPassword) {
+    throw BadRequest("wrong-password");
+   }
 
-			return user;
-		} catch (e) {
-			if (e instanceof HTTPException) {
-				throw e;
-			}
-			throw InternalError("error-login");
-		}
-	}
+   return user;
+  } catch (e) {
+   if (e instanceof HTTPException) {
+    throw e;
+   }
+   throw InternalError("error-login");
+  }
+ }
 
-	async signup(data: SignUpDTO) {
-		try {
-			const existingEmail = await this.usersRepository.findOneByEmail(
-				data.email
-			);
-			if (existingEmail) {
-				throw BadRequest("email-already-in-use");
-			}
-			const hashedPassword = await this.hashingService.hash(data.password);
-			data.password = hashedPassword;
+ async signup(data: SignUpDTO) {
+  try {
+   const existingEmail = await this.usersRepository.findOneByEmail(
+    data.email
+   );
+   if (existingEmail) {
+    throw BadRequest("email-already-in-use");
+   }
+   const hashedPassword = await this.hashingService.hash(data.password);
+   data.password = hashedPassword;
 
-			const newUser = await this.usersRepository.create(data);
+   const newUser = await this.usersRepository.create(data);
 
-			return newUser;
-		} catch (e) {
-			if (e instanceof HTTPException) {
-				throw e;
-			}
-			throw InternalError("error-signup");
-		}
-	}
+   return newUser;
+  } catch (e) {
+   if (e instanceof HTTPException) {
+    throw e;
+   }
+   throw InternalError("error-signup");
+  }
+ }
 }
 ```
 
@@ -949,7 +932,6 @@ I know I introduced a lot of code, so let's break it down.
   - If the email is not associated to any user, proceed with hashing the password in the request, set the hash as the password of the user;
   - create the new user and return it.
 
-
 #### Error Handling
 
 With the introduction of the service, I of course introduce the error handling part.
@@ -962,27 +944,27 @@ import { StatusCodes } from "./status-codes";
 import { HTTPException } from "hono/http-exception";
 
 export function TooManyRequests(message: string = "Too many requests") {
-	return new HTTPException(StatusCodes.TOO_MANY_REQUESTS, { message });
+ return new HTTPException(StatusCodes.TOO_MANY_REQUESTS, { message });
 }
 
 export function Forbidden(message: string = "Forbidden") {
-	return new HTTPException(StatusCodes.FORBIDDEN, { message });
+ return new HTTPException(StatusCodes.FORBIDDEN, { message });
 }
 
 export function Unauthorized(message: string = "Unauthorized") {
-	return new HTTPException(StatusCodes.UNAUTHORIZED, { message });
+ return new HTTPException(StatusCodes.UNAUTHORIZED, { message });
 }
 
 export function NotFound(message: string = "Not Found") {
-	return new HTTPException(StatusCodes.NOT_FOUND, { message });
+ return new HTTPException(StatusCodes.NOT_FOUND, { message });
 }
 
 export function BadRequest(message: string = "Bad Request") {
-	return new HTTPException(StatusCodes.BAD_REQUEST, { message });
+ return new HTTPException(StatusCodes.BAD_REQUEST, { message });
 }
 
 export function InternalError(message: string = "Internal Error") {
-	return new HTTPException(StatusCodes.INTERNAL_SERVER_ERROR, { message });
+ return new HTTPException(StatusCodes.INTERNAL_SERVER_ERROR, { message });
 }
 ```
 
@@ -999,16 +981,16 @@ import { Scrypt } from "oslo/password";
 
 @injectable()
 export class HashingService {
-	private readonly hasher = new Scrypt();
-	// private readonly hasher = new Argon2id(); // argon2id hasher
+ private readonly hasher = new Scrypt();
+ // private readonly hasher = new Argon2id(); // argon2id hasher
 
-	async hash(data: string) {
-		return this.hasher.hash(data);
-	}
+ async hash(data: string) {
+  return this.hasher.hash(data);
+ }
 
-	async verify(hash: string, data: string) {
-		return this.hasher.verify(hash, data);
-	}
+ async verify(hash: string, data: string) {
+  return this.hasher.verify(hash, data);
+ }
 }
 ```
 
@@ -1029,7 +1011,7 @@ Since `DrizzleORM` offers also the possibility to perform `transaction` in `Post
 import type { DatabaseProvider } from "../providers/database.provider";
 
 export interface Repository {
-	trxHost(trx: DatabaseProvider): any;
+ trxHost(trx: DatabaseProvider): any;
 }
 ```
 
@@ -1079,50 +1061,50 @@ export type UpdateUser = Partial<CreateUser>;
 
 @injectable()
 export class UsersRepository implements Repository {
-	constructor(@inject(DatabaseProvider) private db: DatabaseProvider) {}
+ constructor(@inject(DatabaseProvider) private db: DatabaseProvider) {}
 
-	async findAll() {
-		return this.db.query.usersTable.findMany();
-	}
+ async findAll() {
+  return this.db.query.usersTable.findMany();
+ }
 
-	async findOneById(id: string) {
-		return this.db.query.usersTable.findFirst({
-			where: eq(usersTable.id, id),
-		});
-	}
+ async findOneById(id: string) {
+  return this.db.query.usersTable.findFirst({
+   where: eq(usersTable.id, id),
+  });
+ }
 
-	async findOneByIdOrThrow(id: string) {
-		const user = await this.findOneById(id);
-		if (!user) throw BadRequest("user-not-found");
-		return user;
-	}
+ async findOneByIdOrThrow(id: string) {
+  const user = await this.findOneById(id);
+  if (!user) throw BadRequest("user-not-found");
+  return user;
+ }
 
-	async findOneByEmail(email: string) {
-		return this.db.query.usersTable.findFirst({
-			where: eq(usersTable.email, email),
-		});
-	}
+ async findOneByEmail(email: string) {
+  return this.db.query.usersTable.findFirst({
+   where: eq(usersTable.email, email),
+  });
+ }
 
-	async create(data: CreateUser) {
-		return this.db
-			.insert(usersTable)
-			.values(data)
-			.returning()
-			.then(takeFirstOrThrow);
-	}
+ async create(data: CreateUser) {
+  return this.db
+   .insert(usersTable)
+   .values(data)
+   .returning()
+   .then(takeFirstOrThrow);
+ }
 
-	async update(id: string, data: UpdateUser) {
-		return this.db
-			.update(usersTable)
-			.set(data)
-			.where(eq(usersTable.id, id))
-			.returning()
-			.then(takeFirstOrThrow);
-	}
+ async update(id: string, data: UpdateUser) {
+  return this.db
+   .update(usersTable)
+   .set(data)
+   .where(eq(usersTable.id, id))
+   .returning()
+   .then(takeFirstOrThrow);
+ }
 
-	trxHost(trx: DatabaseProvider) {
-		return new UsersRepository(trx);
-	}
+ trxHost(trx: DatabaseProvider) {
+  return new UsersRepository(trx);
+ }
 }
 ```
 
@@ -1177,9 +1159,9 @@ The `json` body of the `POST` request for the **signup** will be something like 
 
 ```json
 {
-	"email": "email@example.com",
-	"password": `test1234`,
-	"passwordConfirmation": "test1234"
+ "email": "email@example.com",
+ "password": `test1234`,
+ "passwordConfirmation": "test1234"
 }
 ```
 
@@ -1187,8 +1169,8 @@ And the `json` body of the `POST` request for the **login** will be something li
 
 ```json
 {
-	"email": "email@example.com",
-	"password": `test1234`
+ "email": "email@example.com",
+ "password": `test1234`
 }
 ```
 
@@ -1286,7 +1268,7 @@ The Refresh Token DTO is straight forward, I wont spend more time on it.
 import { z } from "zod";
 
 export const refreshTokenDTO = z.object({
-	refreshToken: z.string(),
+ refreshToken: z.string(),
 });
 
 export type RefreshTokenDTO = z.infer<typeof refreshTokenDTO>;
@@ -1394,36 +1376,36 @@ Now the `config.type.ts` file where there are all the `types` of the configurati
 // src/types/config.type.ts
 
 export const config = (): Config => ({
-	isProduction: process.env.NODE_ENV === "production",
-	api: {
-		origin: process.env.ORIGIN ?? "",
-	},
-	postgres: {
-		url: process.env.DATABASE_URL ?? "",
-	},
-	jwt: {
-		accessSecret: process.env.JWT_ACCESS_SECRET || "your_access_secret",
-		refreshSecret: process.env.JWT_REFRESH_SECRET || "your_refresh_secret",
-		accessExpiresIn: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7, // 7 days
-		refreshExpiresIn: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // 30 days
-		refreshExpiresInDate: new Date(Date.now() + 60 * 60 * 24 * 30 * 1000), // 30 days
-	},
+ isProduction: process.env.NODE_ENV === "production",
+ api: {
+  origin: process.env.ORIGIN ?? "",
+ },
+ postgres: {
+  url: process.env.DATABASE_URL ?? "",
+ },
+ jwt: {
+  accessSecret: process.env.JWT_ACCESS_SECRET || "your_access_secret",
+  refreshSecret: process.env.JWT_REFRESH_SECRET || "your_refresh_secret",
+  accessExpiresIn: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7, // 7 days
+  refreshExpiresIn: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30, // 30 days
+  refreshExpiresInDate: new Date(Date.now() + 60 * 60 * 24 * 30 * 1000), // 30 days
+ },
 });
 
 // the rest of the configuration ...
 
 interface Config {
-	isProduction: boolean;
-	api: ApiConfig;
-	postgres: PostgresConfig;
-	jwt: JwtConfig;
+ isProduction: boolean;
+ api: ApiConfig;
+ postgres: PostgresConfig;
+ jwt: JwtConfig;
 }
 interface JwtConfig {
-	accessSecret: string;
-	refreshSecret: string;
-	accessExpiresIn: number;
-	refreshExpiresIn: number;
-	refreshExpiresInDate: Date;
+ accessSecret: string;
+ refreshSecret: string;
+ accessExpiresIn: number;
+ refreshExpiresIn: number;
+ refreshExpiresInDate: Date;
 }
 ```
 
@@ -1445,44 +1427,44 @@ import { config } from "../common/config";
 
 @injectable()
 export class RefreshTokenRepository {
-	constructor(@inject(DatabaseProvider) private db: DatabaseProvider) {}
+ constructor(@inject(DatabaseProvider) private db: DatabaseProvider) {}
 
-	async storeRefreshToken(userId: string, token: string, expiresAt: Date) {
-		return this.db
-			.insert(sessionsTable)
-			.values({ userId, token, expiresAt })
-			.returning()
-			.then(takeFirstOrThrow);
-	}
+ async storeRefreshToken(userId: string, token: string, expiresAt: Date) {
+  return this.db
+   .insert(sessionsTable)
+   .values({ userId, token, expiresAt })
+   .returning()
+   .then(takeFirstOrThrow);
+ }
 
-	async removeRefreshToken(token: string) {
-		return this.db.delete(sessionsTable).where(eq(sessionsTable.token, token));
-	}
+ async removeRefreshToken(token: string) {
+  return this.db.delete(sessionsTable).where(eq(sessionsTable.token, token));
+ }
 
-	async getSessionByToken(refreshToken: string) {
-		return this.db.query.sessionsTable.findFirst({
-			where: eq(sessionsTable.token, refreshToken),
-		});
-	}
+ async getSessionByToken(refreshToken: string) {
+  return this.db.query.sessionsTable.findFirst({
+   where: eq(sessionsTable.token, refreshToken),
+  });
+ }
 
-	async updateRefreshToken(
-		userId: string,
-		oldToken: string,
-		newToken: string,
-		expiresAt: Date
-	) {
-		const body = { userId, token: newToken, expiresAt };
-		await this.db.transaction(async (trx) => {
-			await trx.delete(sessionsTable).where(eq(sessionsTable.token, oldToken));
-			await trx.insert(sessionsTable).values(body);
-		});
-	}
+ async updateRefreshToken(
+  userId: string,
+  oldToken: string,
+  newToken: string,
+  expiresAt: Date
+ ) {
+  const body = { userId, token: newToken, expiresAt };
+  await this.db.transaction(async (trx) => {
+   await trx.delete(sessionsTable).where(eq(sessionsTable.token, oldToken));
+   await trx.insert(sessionsTable).values(body);
+  });
+ }
 
-	async invalidateAllTokensForUser(userId: string) {
-		return this.db
-			.delete(sessionsTable)
-			.where(eq(sessionsTable.userId, userId));
-	}
+ async invalidateAllTokensForUser(userId: string) {
+  return this.db
+   .delete(sessionsTable)
+   .where(eq(sessionsTable.userId, userId));
+ }
 }
 ```
 
@@ -1505,27 +1487,27 @@ import { relations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 
 export const sessionsTable = pgTable("sessions", {
-	id: text("id")
-		.primaryKey()
-		.$defaultFn(() => createId()),
-	token: text("token").notNull(),
-	userId: text("user_id")
-		.notNull()
-		.references(() => usersTable.id, { onDelete: "cascade" }),
-	expiresAt: timestamp("expires_at", {
-		withTimezone: true,
-		mode: "date",
-	}).notNull(),
+ id: text("id")
+  .primaryKey()
+  .$defaultFn(() => createId()),
+ token: text("token").notNull(),
+ userId: text("user_id")
+  .notNull()
+  .references(() => usersTable.id, { onDelete: "cascade" }),
+ expiresAt: timestamp("expires_at", {
+  withTimezone: true,
+  mode: "date",
+ }).notNull(),
 });
 
 export const sessionRelationships = relations(
-	sessionsTable,
-	({ many, one }) => ({
-		users: one(usersTable, {
-			fields: [sessionsTable.userId],
-			references: [usersTable.id],
-		}),
-	})
+ sessionsTable,
+ ({ many, one }) => ({
+  users: one(usersTable, {
+   fields: [sessionsTable.userId],
+   references: [usersTable.id],
+  }),
+ })
 );
 ```
 
@@ -1564,43 +1546,43 @@ import { Unauthorized } from "../common/error";
 import { config } from "../types/config.type";
 
 export const validateAuthSession: MiddlewareHandler = async (c, next) => {
-	const authHeader = c.req.header("Authorization") ?? "";
-	const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
+ const authHeader = c.req.header("Authorization") ?? "";
+ const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
 
-	if (!token) {
-		c.set("userId", null);
-		return next();
-	}
+ if (!token) {
+  c.set("userId", null);
+  return next();
+ }
 
-	try {
-		// Verify the access token
-		const payload = await verify(token, config.jwt.accessSecret);
-		const userId = payload.sub as string;
+ try {
+  // Verify the access token
+  const payload = await verify(token, config.jwt.accessSecret);
+  const userId = payload.sub as string;
 
-		if (!userId) {
-			c.set("userId", null);
-			return next();
-		}
+  if (!userId) {
+   c.set("userId", null);
+   return next();
+  }
 
-		// Set user id in context
-		c.set("userId", userId);
-	} catch (error) {
-		// If token verification fails, set user to null
-		c.set("user", null);
-	}
+  // Set user id in context
+  c.set("userId", userId);
+ } catch (error) {
+  // If token verification fails, set user to null
+  c.set("user", null);
+ }
 
-	return next();
+ return next();
 };
 
 export const requireAuth: MiddlewareHandler<{
-	Variables: {
-		userId: string;
-	};
+ Variables: {
+  userId: string;
+ };
 }> = createMiddleware(async (c, next) => {
-	const user = c.var.userId;
-	if (!user)
-		throw Unauthorized("You must be logged in to access this resource");
-	return next();
+ const user = c.var.userId;
+ if (!user)
+  throw Unauthorized("You must be logged in to access this resource");
+ return next();
 });
 ```
 
@@ -1623,7 +1605,7 @@ app.use(logger()); // [OPTIONAL] if you wanna log all the request and response, 
 and if you wanna protect a route, just use the `requireAuth` middleware on the route:
 
 ```ts
-	.post(
+ .post(
         "/protected-resource",
         requireAuth,
         async (context) => {
@@ -1698,7 +1680,7 @@ Now let's reflect the changes in the `AuthController`.
 // src/controllers/auth.controllers.ts
 
 // Rest of the code...
-	.post(
+ .post(
         "/login",
         zValidator("json", loginDTO),
         limiter({ limit: 10, minutes: 60 }),
@@ -1720,17 +1702,17 @@ You should receive an output like this when you login:
 
 ```json
 {
-	"user": {
-		"id": "mdh2e14meythwnvupsbxez2r",
-		"email": "test@test.com",
-		"password": "5b21310d820a9f0099c6e7fc8eefac3a:28160978a8833f334bd2c92f732b7572c73e5045189cf3b3efc39f45a1bab9b56b4dc23235895b304e46e4bbb6913238f3a79de5ef225d68f399baf76f36f062",
-		"createdAt": "2024-10-27T15:31:10.420Z",
-		"updatedAt": "2024-10-27T15:31:10.420Z"
-	},
+ "user": {
+  "id": "mdh2e14meythwnvupsbxez2r",
+  "email": "test@test.com",
+  "password": "5b21310d820a9f0099c6e7fc8eefac3a:28160978a8833f334bd2c92f732b7572c73e5045189cf3b3efc39f45a1bab9b56b4dc23235895b304e46e4bbb6913238f3a79de5ef225d68f399baf76f36f062",
+  "createdAt": "2024-10-27T15:31:10.420Z",
+  "updatedAt": "2024-10-27T15:31:10.420Z"
+ },
 
-	"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtZGgyZTE0bWV5dGh3bnZ1cHNieGV6MnIiLCJleHAiOjE3MzA3NDA5MzF9.-O2kj5Yf1c-PeAp2oDnlYYQZPmLdEG0b9TCFW_z_Yok",
+ "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtZGgyZTE0bWV5dGh3bnZ1cHNieGV6MnIiLCJleHAiOjE3MzA3NDA5MzF9.-O2kj5Yf1c-PeAp2oDnlYYQZPmLdEG0b9TCFW_z_Yok",
 
-	"refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtZGgyZTE0bWV5dGh3bnZ1cHNieGV6MnIiLCJleHAiOjE3MzI3MjgxMzF9.8DYcg6-y72tNmt6guYt5ePvoGiR1ZJto3M8J4ogVR14"
+ "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtZGgyZTE0bWV5dGh3bnZ1cHNieGV6MnIiLCJleHAiOjE3MzI3MjgxMzF9.8DYcg6-y72tNmt6guYt5ePvoGiR1ZJto3M8J4ogVR14"
 }
 ```
 
@@ -1740,7 +1722,7 @@ According to our implementation the body should look like this.
 
 ```json
 {
-	"refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtZGgyZTE0bWV5dGh3bnZ1cHNieGV6MnIiLCJleHAiOjE3MzI3MjgxMzF9.8DYcg6-y72tNmt6guYt5ePvoGiR1ZJto3M8J4ogVR14"
+ "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtZGgyZTE0bWV5dGh3bnZ1cHNieGV6MnIiLCJleHAiOjE3MzI3MjgxMzF9.8DYcg6-y72tNmt6guYt5ePvoGiR1ZJto3M8J4ogVR14"
 }
 ```
 
@@ -1748,9 +1730,9 @@ and you should get something like this
 
 ```json
 {
-	"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtZGgyZTE0bWV5dGh3bnZ1cHNieGV6MnIiLCJleHAiOjE3MzA3NDA5MzF9.-O2kj5Yf1c-PeAp2oDnlYYQZPmLdEG0b9TCFW_z_Yok",
+ "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtZGgyZTE0bWV5dGh3bnZ1cHNieGV6MnIiLCJleHAiOjE3MzA3NDA5MzF9.-O2kj5Yf1c-PeAp2oDnlYYQZPmLdEG0b9TCFW_z_Yok",
 
-	"refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtZGgyZTE0bWV5dGh3bnZ1cHNieGV6MnIiLCJleHAiOjE3MzI3MjgxMzF9.8DYcg6-y72tNmt6guYt5ePvoGiR1ZJto3M8J4ogVR14"
+ "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtZGgyZTE0bWV5dGh3bnZ1cHNieGV6MnIiLCJleHAiOjE3MzI3MjgxMzF9.8DYcg6-y72tNmt6guYt5ePvoGiR1ZJto3M8J4ogVR14"
 }
 ```
 
@@ -1801,7 +1783,7 @@ export class AuthController implements Controller {
             userId,
             token,
           );
-		  // display or return something to the user
+    // display or return something to the user
         return context.html(`<h1>Email verified!</h1>`)
         },
       );
@@ -1841,85 +1823,85 @@ import { BadRequest } from "../common/error";
 
 @injectable()
 export class EmailVerificationsService {
-	constructor(
-		@inject(DatabaseProvider) private readonly db: DatabaseProvider,
-		@inject(TokensService) private readonly tokensService: TokensService,
-		@inject(MailerService) private readonly mailerService: MailerService,
-		@inject(HashingService) private readonly hashingService: HashingService,
-		@inject(UsersRepository) private readonly usersRepository: UsersRepository,
-		@inject(EmailVerificationsRepository)
-		private readonly emailVerificationsRepository: EmailVerificationsRepository
-	) {}
+ constructor(
+  @inject(DatabaseProvider) private readonly db: DatabaseProvider,
+  @inject(TokensService) private readonly tokensService: TokensService,
+  @inject(MailerService) private readonly mailerService: MailerService,
+  @inject(HashingService) private readonly hashingService: HashingService,
+  @inject(UsersRepository) private readonly usersRepository: UsersRepository,
+  @inject(EmailVerificationsRepository)
+  private readonly emailVerificationsRepository: EmailVerificationsRepository
+ ) {}
 
-	async dispatchEmailVerificationRequest(
-		userId: string,
-		requestedEmail: string
-	) {
-		// generate a token and expiry
-		const { token, expiry, hashedToken } =
-			await this.tokensService.generateTokenWithExpiryAndHash({
-				number: 15,
-				time: 30,
-				lifespan: "m",
-				type: "STRING",
-			});
-		const user = await this.usersRepository.findOneByIdOrThrow(userId);
+ async dispatchEmailVerificationRequest(
+  userId: string,
+  requestedEmail: string
+ ) {
+  // generate a token and expiry
+  const { token, expiry, hashedToken } =
+   await this.tokensService.generateTokenWithExpiryAndHash({
+    number: 15,
+    time: 30,
+    lifespan: "m",
+    type: "STRING",
+   });
+  const user = await this.usersRepository.findOneByIdOrThrow(userId);
 
-		// create a new email verification record
-		await this.emailVerificationsRepository.create({
-			requestedEmail,
-			userId,
-			hashedToken,
-			expiresAt: expiry,
-		});
+  // create a new email verification record
+  await this.emailVerificationsRepository.create({
+   requestedEmail,
+   userId,
+   hashedToken,
+   expiresAt: expiry,
+  });
 
-		// A confirmation-required email message to the proposed new address, instructing the user to
-		// confirm the change and providing a link for unexpected situations
-		this.mailerService.sendEmailVerificationToken({
-			to: requestedEmail,
-			props: {
-				link: token,
-			},
-		});
-	}
+  // A confirmation-required email message to the proposed new address, instructing the user to
+  // confirm the change and providing a link for unexpected situations
+  this.mailerService.sendEmailVerificationToken({
+   to: requestedEmail,
+   props: {
+    link: token,
+   },
+  });
+ }
 
-	async processEmailVerificationRequest(userId: string, token: string) {
-		const validRecord = await this.findAndBurnEmailVerificationToken(
-			userId,
-			token
-		);
-		if (!validRecord) throw BadRequest("invalid-token");
-		await this.usersRepository.update(userId, {
-			email: validRecord.requestedEmail,
-			verified: true,
-		});
-	}
+ async processEmailVerificationRequest(userId: string, token: string) {
+  const validRecord = await this.findAndBurnEmailVerificationToken(
+   userId,
+   token
+  );
+  if (!validRecord) throw BadRequest("invalid-token");
+  await this.usersRepository.update(userId, {
+   email: validRecord.requestedEmail,
+   verified: true,
+  });
+ }
 
-	private async findAndBurnEmailVerificationToken(
-		userId: string,
-		token: string
-	) {
-		return this.db.transaction(async (trx: any) => {
-			// find a valid record
-			const emailVerificationRecord = await this.emailVerificationsRepository
-				.trxHost(trx)
-				.findValidRecord(userId);
-			if (!emailVerificationRecord) return null;
+ private async findAndBurnEmailVerificationToken(
+  userId: string,
+  token: string
+ ) {
+  return this.db.transaction(async (trx: any) => {
+   // find a valid record
+   const emailVerificationRecord = await this.emailVerificationsRepository
+    .trxHost(trx)
+    .findValidRecord(userId);
+   if (!emailVerificationRecord) return null;
 
-			// check if the token is valid
-			const isValidRecord = await this.hashingService.verify(
-				emailVerificationRecord.hashedToken,
-				token
-			);
-			if (!isValidRecord) return null;
+   // check if the token is valid
+   const isValidRecord = await this.hashingService.verify(
+    emailVerificationRecord.hashedToken,
+    token
+   );
+   if (!isValidRecord) return null;
 
-			// burn the token if it is valid
-			await this.emailVerificationsRepository
-				.trxHost(trx)
-				.deleteById(emailVerificationRecord.id);
-			return emailVerificationRecord;
-		});
-	}
+   // burn the token if it is valid
+   await this.emailVerificationsRepository
+    .trxHost(trx)
+    .deleteById(emailVerificationRecord.id);
+   return emailVerificationRecord;
+  });
+ }
 }
 ```
 
@@ -1936,62 +1918,62 @@ import { HashingService } from "./hashing.service";
 
 @injectable()
 export class TokensService {
-	constructor(
-		@inject(HashingService) private readonly hashingService: HashingService
-	) {}
+ constructor(
+  @inject(HashingService) private readonly hashingService: HashingService
+ ) {}
 
-	generateNumberToken(number: number) {
-		const alphabet = "1234567890";
-		return generateRandomString(number, alphabet);
-	}
+ generateNumberToken(number: number) {
+  const alphabet = "1234567890";
+  return generateRandomString(number, alphabet);
+ }
 
-	generateStringToken(number: number) {
-		const alphabet = "23456789ABCDEFGHJKLMNPQRSTUVZ";
-		return generateRandomString(number, alphabet);
-	}
+ generateStringToken(number: number) {
+  const alphabet = "23456789ABCDEFGHJKLMNPQRSTUVZ";
+  return generateRandomString(number, alphabet);
+ }
 
-	generateTokenWithExpiry({
-		number,
-		time,
-		lifespan,
-		type,
-	}: {
-		number: number;
-		time: number;
-		lifespan: TimeSpanUnit;
-		type: "NUMBER" | "STRING";
-	}) {
-		return {
-			token:
-				type === "NUMBER"
-					? this.generateNumberToken(number)
-					: this.generateStringToken(number),
-			expiry: createDate(new TimeSpan(time, lifespan)),
-		};
-	}
+ generateTokenWithExpiry({
+  number,
+  time,
+  lifespan,
+  type,
+ }: {
+  number: number;
+  time: number;
+  lifespan: TimeSpanUnit;
+  type: "NUMBER" | "STRING";
+ }) {
+  return {
+   token:
+    type === "NUMBER"
+     ? this.generateNumberToken(number)
+     : this.generateStringToken(number),
+   expiry: createDate(new TimeSpan(time, lifespan)),
+  };
+ }
 
-	async generateTokenWithExpiryAndHash({
-		number,
-		time,
-		lifespan,
-		type,
-	}: {
-		number: number;
-		time: number;
-		lifespan: TimeSpanUnit;
-		type: "NUMBER" | "STRING";
-	}) {
-		const token =
-			type === "NUMBER"
-				? this.generateNumberToken(number)
-				: this.generateStringToken(number);
-		const hashedToken = await this.hashingService.hash(token);
-		return {
-			token,
-			hashedToken,
-			expiry: createDate(new TimeSpan(time, lifespan)),
-		};
-	}
+ async generateTokenWithExpiryAndHash({
+  number,
+  time,
+  lifespan,
+  type,
+ }: {
+  number: number;
+  time: number;
+  lifespan: TimeSpanUnit;
+  type: "NUMBER" | "STRING";
+ }) {
+  const token =
+   type === "NUMBER"
+    ? this.generateNumberToken(number)
+    : this.generateStringToken(number);
+  const hashedToken = await this.hashingService.hash(token);
+  return {
+   token,
+   hashedToken,
+   expiry: createDate(new TimeSpan(time, lifespan)),
+  };
+ }
 }
 ```
 
@@ -2010,63 +1992,63 @@ import { injectable } from "tsyringe";
 import nodemailer from "nodemailer";
 
 type SendMail = {
-	to: string | string[];
-	subject: string;
-	html: string;
+ to: string | string[];
+ subject: string;
+ html: string;
 };
 
 type SendTemplate<T> = {
-	to: string | string[];
-	props: T;
+ to: string | string[];
+ props: T;
 };
 
 @injectable()
 export class MailerService {
-	private nodemailer = nodemailer.createTransport({
-		host: "smtp.ethereal.email",
-		port: 587,
-		secure: false, // Use `true` for port 465, `false` for all other ports
-		auth: {
-			user: "adella.hoppe@ethereal.email",
-			pass: "dshNQZYhATsdJ3ENke",
-		},
-	});
+ private nodemailer = nodemailer.createTransport({
+  host: "smtp.ethereal.email",
+  port: 587,
+  secure: false, // Use `true` for port 465, `false` for all other ports
+  auth: {
+   user: "adella.hoppe@ethereal.email",
+   pass: "dshNQZYhATsdJ3ENke",
+  },
+ });
 
-	sendEmailVerificationToken(data: SendTemplate<{ link: string }>) {
-		const template = handlebars.compile(this.getTemplate("email-verification"));
-		return this.send({
-			to: data.to,
-			subject: "Email Verification",
-			html: template({ link: data.props.link }),
-		});
-	}
+ sendEmailVerificationToken(data: SendTemplate<{ link: string }>) {
+  const template = handlebars.compile(this.getTemplate("email-verification"));
+  return this.send({
+   to: data.to,
+   subject: "Email Verification",
+   html: template({ link: data.props.link }),
+  });
+ }
 
-	sendResetPasswordOTP(data: SendTemplate<{ otp: string }>) {
-		const template = handlebars.compile(this.getTemplate("reset-password"));
-		return this.send({
-			to: data.to,
-			subject: "Password Reset",
-			html: template({ code: data.props.otp }),
-		});
-	}
+ sendResetPasswordOTP(data: SendTemplate<{ otp: string }>) {
+  const template = handlebars.compile(this.getTemplate("reset-password"));
+  return this.send({
+   to: data.to,
+   subject: "Password Reset",
+   html: template({ code: data.props.otp }),
+  });
+ }
 
-	private async send({ to, subject, html }: SendMail) {
-		const message = await this.nodemailer.sendMail({
-			from: '"Example" <example@ethereal.email>', // sender address
-			bcc: to,
-			subject, // Subject line
-			text: html,
-			html,
-		});
-	}
+ private async send({ to, subject, html }: SendMail) {
+  const message = await this.nodemailer.sendMail({
+   from: '"Example" <example@ethereal.email>', // sender address
+   bcc: to,
+   subject, // Subject line
+   text: html,
+   html,
+  });
+ }
 
-	private getTemplate(template: string) {
-		const __dirname = path.dirname(__filename); // get the name of the directory
-		return fs.readFileSync(
-			path.join(__dirname, `../infrastructure/email-templates/${template}.hbs`),
-			"utf-8"
-		);
-	}
+ private getTemplate(template: string) {
+  const __dirname = path.dirname(__filename); // get the name of the directory
+  return fs.readFileSync(
+   path.join(__dirname, `../infrastructure/email-templates/${template}.hbs`),
+   "utf-8"
+  );
+ }
 }
 ```
 
@@ -2079,7 +2061,6 @@ Those files are `.hbs` that are basically **Handlebars** file, that is a templat
 
 > Handlebars is a simple **templating language**.
 > It uses a template and an input object to generate HTML or other text formats. Handlebars templates look like regular text with embedded Handlebars expressions.
-
 
 ### Email Verifications Repository
 
@@ -2095,55 +2076,54 @@ import { takeFirst, takeFirstOrThrow } from "../infrastructure/database/utils";
 import { emailVerificationsTable } from "./../../../tables";
 
 export type CreateEmailVerification = Pick<
-	InferInsertModel<typeof emailVerificationsTable>,
-	"requestedEmail" | "hashedToken" | "userId" | "expiresAt"
+ InferInsertModel<typeof emailVerificationsTable>,
+ "requestedEmail" | "hashedToken" | "userId" | "expiresAt"
 >;
 
 @injectable()
 export class EmailVerificationsRepository implements Repository {
-	constructor(
-		@inject(DatabaseProvider) private readonly db: DatabaseProvider
-	) {}
+ constructor(
+  @inject(DatabaseProvider) private readonly db: DatabaseProvider
+ ) {}
 
-	// creates a new email verification record or updates an existing one
-	async create(data: CreateEmailVerification) {
-		return this.db
-			.insert(emailVerificationsTable)
-			.values(data)
-			.onConflictDoUpdate({
-				target: emailVerificationsTable.userId,
-				set: data,
-			})
-			.returning()
-			.then(takeFirstOrThrow);
-	}
+ // creates a new email verification record or updates an existing one
+ async create(data: CreateEmailVerification) {
+  return this.db
+   .insert(emailVerificationsTable)
+   .values(data)
+   .onConflictDoUpdate({
+    target: emailVerificationsTable.userId,
+    set: data,
+   })
+   .returning()
+   .then(takeFirstOrThrow);
+ }
 
-	// finds a valid record by token and userId
-	async findValidRecord(userId: string) {
-		return this.db
-			.select()
-			.from(emailVerificationsTable)
-			.where(
-				and(
-					eq(emailVerificationsTable.userId, userId),
-					gte(emailVerificationsTable.expiresAt, new Date())
-				)
-			)
-			.then(takeFirst);
-	}
+ // finds a valid record by token and userId
+ async findValidRecord(userId: string) {
+  return this.db
+   .select()
+   .from(emailVerificationsTable)
+   .where(
+    and(
+     eq(emailVerificationsTable.userId, userId),
+     gte(emailVerificationsTable.expiresAt, new Date())
+    )
+   )
+   .then(takeFirst);
+ }
 
-	async deleteById(id: string) {
-		return this.db
-			.delete(emailVerificationsTable)
-			.where(eq(emailVerificationsTable.id, id));
-	}
+ async deleteById(id: string) {
+  return this.db
+   .delete(emailVerificationsTable)
+   .where(eq(emailVerificationsTable.id, id));
+ }
 
-	trxHost(trx: DatabaseProvider) {
-		return new EmailVerificationsRepository(trx);
-	}
+ trxHost(trx: DatabaseProvider) {
+  return new EmailVerificationsRepository(trx);
+ }
 }
 ```
-
 
 ### Email Verifications Table
 
@@ -2157,32 +2137,31 @@ import { usersTable } from "./users.table";
 import { timestamps } from "./utils";
 
 export const emailVerificationsTable = pgTable("email_verifications", {
-	id: text("id")
-		.primaryKey()
-		.$defaultFn(() => createId()),
-	hashedToken: text("hashed_token").notNull(),
-	userId: text("user_id")
-		.notNull()
-		.references(() => usersTable.id)
-		.unique(),
-	requestedEmail: text("requested_email").notNull(),
-	expiresAt: timestamp("expires_at", {
-		mode: "date",
-		withTimezone: true,
-	}).notNull(),
-	...timestamps,
+ id: text("id")
+  .primaryKey()
+  .$defaultFn(() => createId()),
+ hashedToken: text("hashed_token").notNull(),
+ userId: text("user_id")
+  .notNull()
+  .references(() => usersTable.id)
+  .unique(),
+ requestedEmail: text("requested_email").notNull(),
+ expiresAt: timestamp("expires_at", {
+  mode: "date",
+  withTimezone: true,
+ }).notNull(),
+ ...timestamps,
 });
 
 export const emailVerificationsRelations = relations(
-	emailVerificationsTable,
-	({ one }) => ({
-			fields: [emailVerificationsTable.userId],
-			references: [usersTable.id],
-		}),
-	})
+ emailVerificationsTable,
+ ({ one }) => ({
+   fields: [emailVerificationsTable.userId],
+   references: [usersTable.id],
+  }),
+ })
 );
 ```
-
 
 ### Users Table
 
@@ -2191,13 +2170,13 @@ Since we are verifying the user email, we have to find a way to mark the user as
 ```ts
 // ... all the imports
 export const usersTable = pgTable("users", {
-	id: text("id")
-		.primaryKey()
-		.$defaultFn(() => createId()),
-	email: citext("email").notNull().unique(),
-	password: text("password").notNull(),
-	verified: boolean("verified").notNull().default(false), // flag to add
-	...timestamps,
+ id: text("id")
+  .primaryKey()
+  .$defaultFn(() => createId()),
+ email: citext("email").notNull().unique(),
+ password: text("password").notNull(),
+ verified: boolean("verified").notNull().default(false), // flag to add
+ ...timestamps,
 });
 // ...the rest of the code
 ```
@@ -2206,14 +2185,13 @@ and also update the relations:
 
 ```ts
 export const usersRelations = relations(usersTable, ({ many, one }) => ({
-	sessions: many(sessionsTable),
-	emailVerifications: one(emailVerificationsTable, {
-		fields: [usersTable.id],
-		references: [emailVerificationsTable.userId],
-	}),
+ sessions: many(sessionsTable),
+ emailVerifications: one(emailVerificationsTable, {
+  fields: [usersTable.id],
+  references: [emailVerificationsTable.userId],
+ }),
 }));
 ```
-
 
 ## Forgot password, OTP code verification, Reset password
 
@@ -2233,20 +2211,20 @@ These steps help maintain the security and integrity of user accounts by ensurin
 
 Implementing a secure password reset mechanism involves coordinated client-server interactions. Here’s an overview of the process:
 
-1.  **Initiating Password Reset**:
+1. **Initiating Password Reset**:
 
     - The user navigates to the "Forgot Password" section and submits their registered email address.
     - The client sends a `POST` request to the `/forgotpassword` endpoint with the user's email.
     - The server generates a unique password reset token, stores a hashed version of it in the database, and sends the token to the user's email via the `MailerService`.
 
-2.  **Verifying the OTP**:
+2. **Verifying the OTP**:
 
     - Upon receiving the OTP in their email, the user enters it into the application.
     - The client sends a `POST` request to the `/verify-token` endpoint with the email and OTP.
     - The server validates the token by checking its existence, ensuring it hasn't expired, and verifying its correctness using the `HashingService`.
     - If the token is valid, the server responds with a success status, allowing the user to proceed to reset their password.
 
-3.  **Resetting the Password**: - The user enters a new password and confirms it. - The client sends a `POST` request to the `/resetpassword/:token` endpoint, including the new password and the token in the URL. - The server verifies the token again to ensure it's still valid. - Upon successful verification, the server updates the user's password in the database using the `HashingService` to securely hash the new password. - The server also invalidates any existing user sessions to prevent unauthorized access.
+3. **Resetting the Password**: - The user enters a new password and confirms it. - The client sends a `POST` request to the `/resetpassword/:token` endpoint, including the new password and the token in the URL. - The server verifies the token again to ensure it's still valid. - Upon successful verification, the server updates the user's password in the database using the `HashingService` to securely hash the new password. - The server also invalidates any existing user sessions to prevent unauthorized access.
 
 ### Defining routes
 
@@ -2271,39 +2249,39 @@ export class AuthController implements Controller {
  routes(){
      return this.controller
         // login, signup, refresh token and email verification routes...
-	.post(
-		"/forgotpassword",
-		zValidator("json", passwordResetEmailDTO),
-		limiter({ limit: 10, minutes: 60 }),
-		async (context) => {
-			const { email } = context.req.valid("json");
-			await this.passwordResetService.createPasswordResetToken({
-				email,
-			});
-			return context.json({ status: "success" });
-		}
-	)
-	.post(
-		"/verify-token",
-		zValidator("json", passwordResetEmailVerificationDTO),
-		limiter({ limit: 10, minutes: 60 }),
-		async (context) => {
-			const { email, token } = context.req.valid("json");
-			await this.passwordResetService.validateToken(token, email);
-			return context.json({ status: "success " });
-		}
-	)
-	.post(
-		"/resetpassword/:token",
-		zValidator("json", passwordResetDTO),
-		limiter({ limit: 10, minutes: 60 }),
-		async (context) => {
-			const body = context.req.valid("json");
-			const token = context.req.param("token");
-			await this.passwordResetService.resetPassword(token, body);
-			return context.json({ status: "success" });
-		}
-	);
+ .post(
+  "/forgotpassword",
+  zValidator("json", passwordResetEmailDTO),
+  limiter({ limit: 10, minutes: 60 }),
+  async (context) => {
+   const { email } = context.req.valid("json");
+   await this.passwordResetService.createPasswordResetToken({
+    email,
+   });
+   return context.json({ status: "success" });
+  }
+ )
+ .post(
+  "/verify-token",
+  zValidator("json", passwordResetEmailVerificationDTO),
+  limiter({ limit: 10, minutes: 60 }),
+  async (context) => {
+   const { email, token } = context.req.valid("json");
+   await this.passwordResetService.validateToken(token, email);
+   return context.json({ status: "success " });
+  }
+ )
+ .post(
+  "/resetpassword/:token",
+  zValidator("json", passwordResetDTO),
+  limiter({ limit: 10, minutes: 60 }),
+  async (context) => {
+   const body = context.req.valid("json");
+   const token = context.req.param("token");
+   await this.passwordResetService.resetPassword(token, body);
+   return context.json({ status: "success" });
+  }
+ );
   }
 }
 ```
@@ -2328,39 +2306,39 @@ import { z } from "zod";
 import { passwordResetTable } from "../infrastructure/database/tables/password-reset.table";
 
 export const passwordResetEmailDTO = z.object({
-	email: z.string().email(),
+ email: z.string().email(),
 });
 
 export const passwordResetEmailVerificationDTO = z.object({
-	email: z.string().email(),
-	token: z.string().min(6).max(6),
+ email: z.string().email(),
+ token: z.string().min(6).max(6),
 });
 
 export const passwordResetDTO = z
-	.object({
-		newPassword: z
-			.string({ required_error: "required-password" })
-			.min(8, "password-too-short")
-			.max(32, "password-too-long"),
-		confirmNewPassword: z
-			.string({ required_error: "required-confirmation-password" })
-			.min(8, "password-too-short")
-			.max(32, "password-too-long"),
-		email: z.string().email(),
-	})
-	.refine((data) => data.newPassword === data.confirmNewPassword, {
-		message: "passwords-donot-match",
-		path: ["passwordConfirmation"],
-	});
+ .object({
+  newPassword: z
+   .string({ required_error: "required-password" })
+   .min(8, "password-too-short")
+   .max(32, "password-too-long"),
+  confirmNewPassword: z
+   .string({ required_error: "required-confirmation-password" })
+   .min(8, "password-too-short")
+   .max(32, "password-too-long"),
+  email: z.string().email(),
+ })
+ .refine((data) => data.newPassword === data.confirmNewPassword, {
+  message: "passwords-donot-match",
+  path: ["passwordConfirmation"],
+ });
 
 export type ResetPasswordEmailDto = z.infer<typeof passwordResetEmailDTO>;
 export type ResetEmailVerificationDTO = z.infer<
-	typeof passwordResetEmailVerificationDTO
+ typeof passwordResetEmailVerificationDTO
 >;
 export type ResetPasswordDto = z.infer<typeof passwordResetDTO>;
 export type CreatePasswordResetRecord = Pick<
-	InferInsertModel<typeof passwordResetTable>,
-	"hashedToken" | "email" | "expiresAt"
+ InferInsertModel<typeof passwordResetTable>,
+ "hashedToken" | "email" | "expiresAt"
 >;
 ```
 
@@ -2377,135 +2355,135 @@ import { UsersRepository } from "../repositories/user.repository";
 import { PasswordResetRepository } from "../repositories/password-reset.repository";
 import { BadRequest, InternalError } from "../common/error";
 import {
-	ResetPasswordDTO,
-	ResetPasswordEmailDTO,
+ ResetPasswordDTO,
+ ResetPasswordEmailDTO,
 } from "../dtos/password-reset.dto";
 
 @injectable()
 export class PasswordResetService {
-	constructor(
-		@inject(HashingService) private readonly hashingService: HashingService,
-		@inject(TokensService) private readonly tokensService: TokensService,
-		@inject(MailerService) private readonly mailerService: MailerService,
-		@inject(UsersRepository) private readonly usersRepository: UsersRepository,
-		@inject(PasswordResetRepository)
-		private readonly passwordResetRepository: PasswordResetRepository
-	) {}
+ constructor(
+  @inject(HashingService) private readonly hashingService: HashingService,
+  @inject(TokensService) private readonly tokensService: TokensService,
+  @inject(MailerService) private readonly mailerService: MailerService,
+  @inject(UsersRepository) private readonly usersRepository: UsersRepository,
+  @inject(PasswordResetRepository)
+  private readonly passwordResetRepository: PasswordResetRepository
+ ) {}
 
-	async validateToken(token: string, email: string) {
-		try {
-			const record =
-				await this.passwordResetRepository.findValidRecordByEmail(email);
+ async validateToken(token: string, email: string) {
+  try {
+   const record =
+    await this.passwordResetRepository.findValidRecordByEmail(email);
 
-			if (!record || !isWithinExpirationDate(record?.expiresAt)) {
-				throw BadRequest("invalid-or-expired-token");
-			}
+   if (!record || !isWithinExpirationDate(record?.expiresAt)) {
+    throw BadRequest("invalid-or-expired-token");
+   }
 
-			const isValidToken = await this.hashingService.verify(
-				record?.hashedToken,
-				token
-			);
+   const isValidToken = await this.hashingService.verify(
+    record?.hashedToken,
+    token
+   );
 
-			if (!isValidToken) {
-				throw BadRequest("invalid-or-expired-token");
-			}
+   if (!isValidToken) {
+    throw BadRequest("invalid-or-expired-token");
+   }
 
-			return { status: "success" };
-		} catch (e) {
-			if (e instanceof HTTPException) {
-				throw e;
-			}
-			throw InternalError("error-veryfing-token");
-		}
-	}
+   return { status: "success" };
+  } catch (e) {
+   if (e instanceof HTTPException) {
+    throw e;
+   }
+   throw InternalError("error-veryfing-token");
+  }
+ }
 
-	async resetPassword(token: string, data: ResetPasswordDTO) {
-		try {
-			const record = await this.passwordResetRepository.findValidRecordByEmail(
-				data.email
-			);
-			if (!record || !isWithinExpirationDate(record?.expiresAt)) {
-				throw BadRequest("invalid-or-expired-token");
-			}
+ async resetPassword(token: string, data: ResetPasswordDTO) {
+  try {
+   const record = await this.passwordResetRepository.findValidRecordByEmail(
+    data.email
+   );
+   if (!record || !isWithinExpirationDate(record?.expiresAt)) {
+    throw BadRequest("invalid-or-expired-token");
+   }
 
-			const isValidToken = await this.hashingService.verify(
-				record?.hashedToken,
-				token
-			);
+   const isValidToken = await this.hashingService.verify(
+    record?.hashedToken,
+    token
+   );
 
-			if (!isValidToken) {
-				throw BadRequest("invalid-or-expired-token");
-			}
-			const user = await this.usersRepository.findOneByEmail(data.email);
+   if (!isValidToken) {
+    throw BadRequest("invalid-or-expired-token");
+   }
+   const user = await this.usersRepository.findOneByEmail(data.email);
 
-			if (!user) {
-				throw BadRequest("no-user-with-this-email");
-			}
+   if (!user) {
+    throw BadRequest("no-user-with-this-email");
+   }
 
-			if (data.newPassword !== data.confirmNewPassword) {
-				throw BadRequest("password-donot-match");
-			}
+   if (data.newPassword !== data.confirmNewPassword) {
+    throw BadRequest("password-donot-match");
+   }
 
-			await this.passwordResetRepository.deleteById(record.id);
+   await this.passwordResetRepository.deleteById(record.id);
 
-			const hashedPassword = await this.hashingService.hash(data.newPassword);
+   const hashedPassword = await this.hashingService.hash(data.newPassword);
 
-			await this.usersRepository.update(user.id, {
-				password: hashedPassword,
-			});
-		} catch (e) {
-			if (e instanceof HTTPException) {
-				throw e;
-			}
-			throw InternalError("error-resetting-password");
-		}
-	}
+   await this.usersRepository.update(user.id, {
+    password: hashedPassword,
+   });
+  } catch (e) {
+   if (e instanceof HTTPException) {
+    throw e;
+   }
+   throw InternalError("error-resetting-password");
+  }
+ }
 
-	async createPasswordResetToken(data: ResetPasswordEmailDTO) {
-		try {
-			// generate a token, expiry and hash
-			const { token, expiry, hashedToken } =
-				await this.tokensService.generateTokenWithExpiryAndHash({
-					number: 6,
-					time: 15,
-					lifespan: "m",
-					type: "NUMBER",
-				});
-			const user = await this.usersRepository.findOneByEmail(data.email);
+ async createPasswordResetToken(data: ResetPasswordEmailDTO) {
+  try {
+   // generate a token, expiry and hash
+   const { token, expiry, hashedToken } =
+    await this.tokensService.generateTokenWithExpiryAndHash({
+     number: 6,
+     time: 15,
+     lifespan: "m",
+     type: "NUMBER",
+    });
+   const user = await this.usersRepository.findOneByEmail(data.email);
 
-			if (!user) {
-				throw BadRequest("no-user-with-this-email");
-			}
-			//if there is an existing record delete it
-			await this.findRecordAndDelete(user.id);
-			// create a new email verification record
-			await this.passwordResetRepository.create({
-				email: user.email,
-				hashedToken: hashedToken,
-				expiresAt: expiry,
-			});
+   if (!user) {
+    throw BadRequest("no-user-with-this-email");
+   }
+   //if there is an existing record delete it
+   await this.findRecordAndDelete(user.id);
+   // create a new email verification record
+   await this.passwordResetRepository.create({
+    email: user.email,
+    hashedToken: hashedToken,
+    expiresAt: expiry,
+   });
 
-			this.mailerService.sendResetPasswordOTP({
-				to: user.email,
-				props: {
-					otp: token,
-				},
-			});
-		} catch (e) {
-			if (e instanceof HTTPException) {
-				throw e;
-			}
-			throw InternalError("error-creating-password-reset-token");
-		}
-	}
+   this.mailerService.sendResetPasswordOTP({
+    to: user.email,
+    props: {
+     otp: token,
+    },
+   });
+  } catch (e) {
+   if (e instanceof HTTPException) {
+    throw e;
+   }
+   throw InternalError("error-creating-password-reset-token");
+  }
+ }
 
-	async findRecordAndDelete(email: string) {
-		const existingRecord =
-			await this.passwordResetRepository.findValidRecordByEmail(email);
-		if (existingRecord) {
-			await this.passwordResetRepository.deleteById(existingRecord.id);
-		}
-	}
+ async findRecordAndDelete(email: string) {
+  const existingRecord =
+   await this.passwordResetRepository.findValidRecordByEmail(email);
+  if (existingRecord) {
+   await this.passwordResetRepository.deleteById(existingRecord.id);
+  }
+ }
 }
 ```
 
@@ -2522,44 +2500,44 @@ import { CreatePasswordResetRecord } from "../dtos/password-reset.dto";
 
 @injectable()
 export class PasswordResetRepository implements Repository {
-	constructor(
-		@inject(DatabaseProvider) private readonly db: DatabaseProvider
-	) {}
+ constructor(
+  @inject(DatabaseProvider) private readonly db: DatabaseProvider
+ ) {}
 
-	async create(data: CreatePasswordResetRecord) {
-		return this.db
-			.insert(passwordResetTable)
-			.values(data)
-			.onConflictDoUpdate({
-				target: passwordResetTable.email,
-				set: data,
-			})
-			.returning()
-			.then(takeFirstOrThrow);
-	}
+ async create(data: CreatePasswordResetRecord) {
+  return this.db
+   .insert(passwordResetTable)
+   .values(data)
+   .onConflictDoUpdate({
+    target: passwordResetTable.email,
+    set: data,
+   })
+   .returning()
+   .then(takeFirstOrThrow);
+ }
 
-	async findValidRecordByEmail(email: string) {
-		return this.db
-			.select()
-			.from(passwordResetTable)
-			.where(
-				and(
-					eq(passwordResetTable.email, email),
-					gte(passwordResetTable.expiresAt, new Date())
-				)
-			)
-			.then(takeFirst);
-	}
+ async findValidRecordByEmail(email: string) {
+  return this.db
+   .select()
+   .from(passwordResetTable)
+   .where(
+    and(
+     eq(passwordResetTable.email, email),
+     gte(passwordResetTable.expiresAt, new Date())
+    )
+   )
+   .then(takeFirst);
+ }
 
-	async deleteById(id: string) {
-		return this.db
-			.delete(passwordResetTable)
-			.where(eq(passwordResetTable.id, id));
-	}
+ async deleteById(id: string) {
+  return this.db
+   .delete(passwordResetTable)
+   .where(eq(passwordResetTable.id, id));
+ }
 
-	trxHost(trx: DatabaseProvider) {
-		return new PasswordResetRepository(trx);
-	}
+ trxHost(trx: DatabaseProvider) {
+  return new PasswordResetRepository(trx);
+ }
 }
 ```
 
@@ -2585,13 +2563,13 @@ This architecture provides a clean, scalable solution that can be expanded furth
 
 Now that you've set up the foundational authentication system, it's time to take the following steps to further enhance your application:
 
-1.  **Security Features**:
+1. **Security Features**:
 
 - **Two-Factor Authentication (2FA)**:
   - **Authy**: A popular app for **TOTP-based 2FA** that you can integrate into your system for an additional security layer.
   - **Duo Security**: A comprehensive 2FA solution for web and mobile apps with enterprise-grade features.
 
-1.  **User Experience**:
+1. **User Experience**:
 
 - **Social Logins**:
   - **Auth0**: A popular Identity-as-a-Service (IDaaS) provider that simplifies the integration of multiple social logins (Google, Facebook, GitHub, etc.) with easy-to-use SDKs.
@@ -2600,7 +2578,7 @@ Now that you've set up the foundational authentication system, it's time to take
   - **SendGrid**: A robust email delivery service that offers customizable email templates and APIs to send transactional emails such as verification and password reset emails.
   - **Mailgun**: Provides an API for sending emails with advanced analytics and email template management.
 
-3.  **Testing and Quality Assurance**:
+3. **Testing and Quality Assurance**:
 
 - **Test Coverage**:
   - **SonarCloud**: A code quality and coverage analysis tool that integrates with your CI/CD pipeline and ensures your authentication system is thoroughly tested.
@@ -2611,7 +2589,7 @@ Now that you've set up the foundational authentication system, it's time to take
   - **SwaggerHub**: A platform for designing, documenting, and testing your REST APIs. It offers a comprehensive interface for documenting your authentication API, and it can generate client libraries for different languages.
   - **Redocly**: Another popular OpenAPI-based API documentation tool with a more modern UI for end-users.
 
-5.  **Monitor and Maintain**:
+5. **Monitor and Maintain**:
 
 - **Error Monitoring**:
   - **Sentry**: Provides **real-time error tracking** and performance monitoring, which can help you track down issues in your authentication routes (like invalid tokens or failed login attempts).
@@ -2620,18 +2598,18 @@ Now that you've set up the foundational authentication system, it's time to take
   - **Datadog**: Offers infrastructure monitoring, log management, and application performance monitoring (APM). You can track authentication issues, like slow login responses or downtime.
   - **Loggly**: A logging tool for aggregating, searching, and analyzing logs. It's useful for tracking authentication-related logs, such as failed login attempts or token generation events.
 
-6.  **Scaling**:
+6. **Scaling**:
 
 - **Load Balancers**:
   - **AWS Elastic Load Balancing (ELB)**: Automatically distributes incoming application traffic across multiple instances, which helps scale the authentication system as your traffic increases.
   - **Nginx**: Can be used as a reverse proxy server for load balancing to distribute requests evenly across your application servers.
 
-7.  **User Feedback and Monitoring**:
+7. **User Feedback and Monitoring**:
 
 - **New Relic**: Provides full-stack observability, including user interaction and API monitoring. It helps you track how users interact with your authentication system and whether there are any bottlenecks.
 - **Hotjar**: Allows you to understand user behavior through heatmaps and session recordings. It helps identify where users are getting stuck during login or registration, making it easier to improve the flow.
 
-8.  **CI/CD Integration**:
+8. **CI/CD Integration**:
 
 - **GitHub Actions**: Can be used to automate testing, deployment, and continuous integration for your authentication system.
 - **CircleCI**: Another CI/CD tool that allows you to automate your build, test, and deployment process for your authentication system.
