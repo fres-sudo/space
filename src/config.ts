@@ -40,7 +40,7 @@ export const themeConfig: ThemeConfig = {
     moreLocales: ['en', 'it'],
     fontStyle: 'serif', // sans, serif
     // date format for posts
-    dateFormat: 'DD-MM-YYYY', // YYYY-MM-DD, MM-DD-YYYY, DD-MM-YYYY, MONTH DAY YYYY, DAY MONTH YYYY
+    dateFormat: 'DAY MONTH YYYY', // 'DD-MM-YYYY' YYYY-MM-DD, MM-DD-YYYY, DD-MM-YYYY, MONTH DAY YYYY,
     // enable table of contents for all posts by default
     toc: true, // true, false
     // enable KaTeX for mathematical formulas rendering

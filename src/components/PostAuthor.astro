@@ -1,0 +1,97 @@
+---
+import Image from 'astro/components/Image.astro'
+import { themeConfig } from '@/config'
+import { isPostPage } from '@/utils/page'
+
+interface Props {
+  date?: Date
+  updatedDate?: Date
+  minutes?: number
+}
+
+const { date, updatedDate, minutes } = Astro.props
+const format = themeConfig.global.dateFormat
+const isPost = isPostPage(Astro.url.pathname)
+const timeSpacingClass = isPost ? 'ml-1.75' : 'ml-1.5'
+
+function formatDate(date: Date, format: 'YYYY-MM-DD' | 'MM-DD-YYYY' | 'DD-MM-YYYY' | 'MONTH DAY YYYY' | 'DAY MONTH YYYY') {
+  if (format === 'YYYY-MM-DD') {
+    return date.toISOString().split('T')[0]
+  }
+
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: format === 'MONTH DAY YYYY' || format === 'DAY MONTH YYYY' ? 'short' : '2-digit',
+    day: format === 'MONTH DAY YYYY' || format === 'DAY MONTH YYYY' ? 'numeric' : '2-digit',
+  }
+
+  switch (format) {
+    case 'MM-DD-YYYY':
+      return date.toLocaleDateString('en-US', options).replace(/\//g, '-')
+    case 'DD-MM-YYYY':
+      return date.toLocaleDateString('en-GB', options).replace(/\//g, '-')
+    case 'MONTH DAY YYYY':
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      }).replace(',', '')
+    case 'DAY MONTH YYYY':
+      return date.toLocaleDateString('en-GB', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      }).replace(',', '')
+    default:
+      return date.toISOString().split('T')[0]
+  }
+}
+---
+
+<div class="w-full flex items-center justify-between">
+  <div class="flex items-center">
+    <Image
+      src="/icons/fres-logo.png"
+      alt="Author's Photo"
+      width="48"
+      height="48"
+      class="border-2 border-gray-200 rounded-full dark:border-gray-700"
+    />
+    <div class="ml-3">
+      <a href="https://fres.space/about" class="text-base text-gray-900 font-semibold transition-colors dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400">
+        Francesco Calicchio
+      </a>
+      {date && (
+        <div class="mt-1 flex items-center text-sm text-gray-600 dark:text-gray-400">
+          <time datetime={date.toISOString().split('T')[0]} class="flex items-center">
+            <svg class="mr-1.5 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+            </svg>
+            {formatDate(date, format)}
+          </time>
+
+          {updatedDate && (
+            <time
+              datetime={updatedDate.toISOString().split('T')[0]}
+              class={`${timeSpacingClass} flex items-center`}
+            >
+              <svg class="mr-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
+              </svg>
+              updated {formatDate(updatedDate, format)}
+            </time>
+          )}
+
+          {minutes !== undefined && (
+            <span class={`${timeSpacingClass} flex items-center`}>
+              <svg class="mr-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+              </svg>
+              {minutes} min read
+            </span>
+          )}
+        </div>
+      )}
+    </div>
+  </div>
+</div>

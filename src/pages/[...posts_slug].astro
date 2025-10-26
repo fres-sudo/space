@@ -2,7 +2,7 @@
 import type { CollectionEntry } from 'astro:content'
 import { getCollection, render } from 'astro:content'
 import Comments from '@/components/Comments/index.astro'
-import PostDate from '@/components/PostDate.astro'
+import PostAuthor from '@/components/PostAuthor.astro'
 import TagsWrapper from '@/components/TagsWrapper.astro'
 import BackButton from '@/components/Widgets/BackButton.astro'
 import TOC from '@/components/Widgets/TOC.astro'
@@ -120,7 +120,7 @@ const { Content, headings, remarkPluginFrontmatter } = await render(post)
       </h1>
     </div>
 
-    <!-- Date -->
+    <!-- Date
     <div
       id="gsap-post-date"
       class="mb-17.2 block c-primary font-time"
@@ -132,7 +132,23 @@ const { Content, headings, remarkPluginFrontmatter } = await render(post)
         updatedDate={post.data.updated}
         minutes={remarkPluginFrontmatter.minutes}
       />
+    </div> -->
+
+    <!-- Post Author -->
+    <div
+      id="gsap-post-date"
+      class="block c-primary"
+      transition:name={`time-${post.data.abbrlink || post.id}${lang ? `-${lang}` : ''}`}
+      data-disable-theme-transition
+    >
+      <PostAuthor
+        date={post.data.published}
+        updatedDate={post.data.updated}
+        minutes={remarkPluginFrontmatter.minutes}
+      />
     </div>
+
+
     <!-- TOC -->
     {post.data.toc && <TOC headings={headings} />}
     <!-- Content -->
