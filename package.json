@@ -5,7 +5,7 @@
   "packageManager": "pnpm@10.12.1",
   "repository": "https://github.com/fres-sudo/space",
   "scripts": {
-    "dev": "astro check && astro dev",
+    "dev": "astro dev",
     "build": "astro check && astro build && pnpm generate-lqip && pnpm apply-lqip",
     "preview": "astro preview",
     "astro": "astro",
